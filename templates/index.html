@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Detection</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <h1>Threat Detection System</h1>
+
+    <!-- Webcam feed -->
+    <img id="webcam" src="" alt="Webcam Feed">
+
+    <!-- Buttons to start and stop detection -->
+    <div>
+        <button onclick="startDetection()">Start Detection</button>
+        <button onclick="stopDetection()">Stop Detection</button>
+    </div>
+
+    <!-- Alert message -->
+    <div id="alert">No threats detected.</div>
+
+    <!-- JavaScript -->
+    <script>
+        async function fetchAlert() {
+            const response = await fetch('/get_alert');
+            const data = await response.json();
+            document.getElementById('alert').innerText = data.alert;
+        }
+        setInterval(fetchAlert, 1000); // Fetch alert every second
+
+        function startDetection() {
+            document.getElementById("webcam").src = "/opencam";  // Start webcam feed
+            alert("Threat detection started!");
+        }
+
+        function stopDetection() {
+            document.getElementById("webcam").src = "";  // Stop webcam feed
+            fetch('/shutdown');  // Shut down camera in Flask
+            alert("Threat detection stopped!");
+        }
+    </script>
+</body>
+</html>
